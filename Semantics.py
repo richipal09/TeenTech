@@ -10,7 +10,15 @@ st.title(" The Semantics")
 st.markdown("---")
 
 # OCI Configuration Settings
-config = oci.config.from_file(profile_name="DEFAULT")
+config = {
+    "user": os.environ["OCI_USER"],
+    "tenancy": os.environ["OCI_TENANCY"],
+    "region": os.environ["OCI_REGION"],
+    "fingerprint": os.environ["OCI_FINGERPRINT"],
+    "key_content": os.environ["OCI_KEY_CONTENT"]
+}
+oci_config = oci.config.validate_config(config)
+
 namespace = "oraseemeaukpubsec"
 bucket = "teentech"
 compartmentid = "ocid1.compartment.oc1..aaaaaaaawalowtjkgiov65xz6vifzfifep3ac4mgo2nschtetybzgxewpxmq"
@@ -32,12 +40,15 @@ def readoutput():
 # Translate Function
 def translate(text):
     compartment_id = "ocid1.tenancy.oc1..aaaaaaaaqn7onpvawffborst65pw657jueegix2axkk3pjf4jlfn76hcqg4q"
-    config = oci.config.from_file(profile_name="DEFAULT")
     endpoint = "https://inference.generativeai.uk-london-1.oci.oraclecloud.com"
     textinput = text
 
-    generative_ai_inference_client = oci.generative_ai_inference.GenerativeAiInferenceClient(config=config, service_endpoint=endpoint, retry_strategy=oci.retry.NoneRetryStrategy(), timeout=(10,240))
-    chat_detail = oci.generative_ai_inference.models.ChatDetails()
+    generative_ai_inference_client = oci.generative_ai_inference.GenerativeAiInferenceClient(
+        config=oci_config,
+        service_endpoint=endpoint,
+        retry_strategy=oci.retry.NoneRetryStrategy(),
+        timeout=(10, 240)
+    )
 
     chat_request = oci.generative_ai_inference.models.CohereChatRequest()
     chat_request.message = f"Translate this to English:\n\n{textinput}"
