@@ -131,23 +131,23 @@ Good Luck Agents!
 
 # === Preloaded Transcripts Info ===
 transcripts = {
-    "Transcript 1 🇮🇹 (Italian)": {
+    "Transcript 1": {
         "language": "Italian",
         "audio_file": "Transcript 1.mp3",
     },
-    "Transcript 2 🇬🇷 (Greek)": {
+    "Transcript 2": {
         "language": "Greek",
         "audio_file": "Transcript 2.mp3",
     },
-    "Transcript 3 🇳🇱 (Dutch)": {
+    "Transcript 3": {
         "language": "Dutch",
         "audio_file": "Transcript 3.mp3",
     },
-    "Transcript 4 🇪🇸 (Spanish)": {
+    "Transcript 4": {
         "language": "Spanish",
         "audio_file": "Transcript 4.mp3",
     },
-    "Transcript 5 🇨🇳 (Chinese)": {
+    "Transcript 5": {
         "language": "Chinese",
         "audio_file": "Transcript 5.mp3",
     },
