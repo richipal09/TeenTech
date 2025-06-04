@@ -5,7 +5,37 @@ import os
 import time
 import io
 
+page_bg_img = """ 
+<style>
+[data-testid="stAppViewContainer"] {
+background-image: url("https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+background-size: cover;
+}
+
+[data-testid="stAppViewContainer"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);  /* Adjust this value for darker/lighter overlay */
+    z-index: 0;
+}
+
+[data-testid="stHeader"] {
+background-color: rgba(0,0,0,0);
+}
+
+[data-testid="stToolbar"] {
+right: 2rem;
+}
+
+</style>
+"""
+
 st.set_page_config(page_title="The Semantics", layout="wide")
+st.markdown(page_bg_img, unsafe_allow_html=True)
 st.title(" The Semantics")
 st.markdown("---")
 
@@ -171,7 +201,6 @@ if "selected_transcript" not in st.session_state:
 selected_key = st.session_state.selected_transcript
 selected_transcript = transcripts[selected_key]
 
-st.markdown(f"**Selected Language:** {selected_transcript['language']}")
 audio_path = f"audio/{selected_transcript['audio_file']}"
 st.audio(audio_path, format="audio/mp3")
 
