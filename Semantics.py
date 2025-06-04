@@ -67,35 +67,6 @@ def readoutput():
     full_transcript = " ".join(t.get("transcription", "") for t in transcriptions)
     return full_transcript.strip()
 
-# Translate Function
-def translate(text):
-    compartment_id = "ocid1.tenancy.oc1..aaaaaaaaqn7onpvawffborst65pw657jueegix2axkk3pjf4jlfn76hcqg4q"
-    endpoint = "https://inference.generativeai.uk-london-1.oci.oraclecloud.com"
-    textinput = text
-
-    generative_ai_inference_client = oci.generative_ai_inference.GenerativeAiInferenceClient(
-        config=oci_config,
-        service_endpoint=endpoint,
-        retry_strategy=oci.retry.NoneRetryStrategy(),
-        timeout=(10, 240)
-    )
-
-    chat_request = oci.generative_ai_inference.models.CohereChatRequest()
-    chat_request.message = f"Translate this to English:\n\n{textinput}"
-    chat_request.max_tokens = 1000
-    chat_request.temperature = 0
-    chat_request.frequency_penalty = 0
-    chat_request.top_p = 0.75
-    chat_request.top_k = 0
-
-    chat_detail.serving_mode = oci.generative_ai_inference.models.OnDemandServingMode(model_id="ocid1.generativeaimodel.oc1.uk-london-1.amaaaaaask7dceyahpidcahiiyhcdmnvicfxo7suq3pxcimkyik75mbxziqq")
-    chat_detail.chat_request = chat_request
-    chat_detail.compartment_id = compartment_id
-    chat_response = generative_ai_inference_client.chat(chat_detail)
-
-    translation = chat_response.data.chat_response.text
-    return translation
-
 # Transcribe Function
 def transcribe(inputfile):
     ai_speech_client = oci.ai_speech.AIServiceSpeechClient(config)
@@ -132,6 +103,32 @@ def transcribe(inputfile):
     if "transcription" not in st.session_state:
         st.session_state["transcription"] = transcription
     return transcription
+
+# Translate Function
+def translate(text):
+    compartment_id = "ocid1.tenancy.oc1..aaaaaaaaqn7onpvawffborst65pw657jueegix2axkk3pjf4jlfn76hcqg4q"
+    config = oci.config.from_file(profile_name="DEFAULT")
+    endpoint = "https://inference.generativeai.uk-london-1.oci.oraclecloud.com"
+    textinput = text
+
+    generative_ai_inference_client = oci.generative_ai_inference.GenerativeAiInferenceClient(config=config, service_endpoint=endpoint, retry_strategy=oci.retry.NoneRetryStrategy(), timeout=(10,240))
+    chat_detail = oci.generative_ai_inference.models.ChatDetails()
+
+    chat_request = oci.generative_ai_inference.models.CohereChatRequest()
+    chat_request.message = textinput
+    chat_request.max_tokens = 1000
+    chat_request.temperature = 0
+    chat_request.frequency_penalty = 0
+    chat_request.top_p = 0.75
+    chat_request.top_k = 0
+
+    chat_detail.serving_mode = oci.generative_ai_inference.models.OnDemandServingMode(model_id="ocid1.generativeaimodel.oc1.uk-london-1.amaaaaaask7dceyahpidcahiiyhcdmnvicfxo7suq3pxcimkyik75mbxziqq")
+    chat_detail.chat_request = chat_request
+    chat_detail.compartment_id = compartment_id
+    chat_response = generative_ai_inference_client.chat(chat_detail)
+
+    translation = chat_response.data.chat_response.text
+    return translation
 
 def upload_to_object_storage(file_path, namespace, bucket_name, object_name, config):
     object_storage_client = oci.object_storage.ObjectStorageClient(config)
@@ -252,7 +249,7 @@ if "transcript_text" in st.session_state:
 if "translated_text" in st.session_state:
     st.text_area("Translation Output", value=st.session_state.translated_text, height=150)
 
-    st.markdown("### 🔎 Step 3: Extract Key Phrases")
+    st.markdown("### 🔎 Extract Key Phrases")
 
     if st.button("Run Key Phrase Extraction"):
         # TODO: Add actual OCI key phrase logic
