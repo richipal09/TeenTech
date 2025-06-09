@@ -72,6 +72,11 @@ def transcribe(inputfile):
     ai_speech_client = oci.ai_speech.AIServiceSpeechClient(config)
     create_transcription_job_response = ai_speech_client.create_transcription_job(
             create_transcription_job_details=oci.ai_speech.models.CreateTranscriptionJobDetails(
+                model_details=oci.ai_speech.models.TranscriptionModelDetails(
+                    model_type="WHISPER_MEDIUM",
+                    domain="GENERIC",
+                    language_code="it",
+                ),
                 compartment_id=compartmentid,
                 input_location=oci.ai_speech.models.ObjectListInlineInputLocation(
                     location_type="OBJECT_LIST_INLINE_INPUT_LOCATION",
