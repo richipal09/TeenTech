@@ -118,13 +118,14 @@ def translate(text):
     generative_ai_inference_client = oci.generative_ai_inference.GenerativeAiInferenceClient(config=config, service_endpoint=endpoint, retry_strategy=oci.retry.NoneRetryStrategy(), timeout=(10,240))
     chat_detail = oci.generative_ai_inference.models.ChatDetails()
 
-    chat_request = oci.generative_ai_inference.models.CohereChatRequest()
-    chat_request.message = textinput
-    chat_request.max_tokens = 1000
-    chat_request.temperature = 0
-    chat_request.frequency_penalty = 0
-    chat_request.top_p = 0.75
-    chat_request.top_k = 0
+    chat_request = oci.generative_ai_inference.models.CohereChatRequest(
+        message = f"Translate this text to English:\n\n{text}",
+        max_tokens = 1000,
+        temperature = 0.1,
+        frequency_penalty = 0,
+        top_p = 0.75,
+        top_k = 0
+    )
 
     chat_detail.serving_mode = oci.generative_ai_inference.models.OnDemandServingMode(model_id="ocid1.generativeaimodel.oc1.uk-london-1.amaaaaaask7dceyahpidcahiiyhcdmnvicfxo7suq3pxcimkyik75mbxziqq")
     chat_detail.chat_request = chat_request
