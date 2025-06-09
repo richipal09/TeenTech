@@ -19,7 +19,7 @@ background-size: cover;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);  /* Adjust this value for darker/lighter overlay */
+    background-color: rgba(0, 0, 0, 0.2);  /* Adjust this value for darker/lighter overlay */
     z-index: 0;
 }
 
@@ -107,7 +107,6 @@ def transcribe(inputfile):
 # Translate Function
 def translate(text):
     compartment_id = "ocid1.tenancy.oc1..aaaaaaaaqn7onpvawffborst65pw657jueegix2axkk3pjf4jlfn76hcqg4q"
-    config = oci.config.from_file(profile_name="DEFAULT")
     endpoint = "https://inference.generativeai.uk-london-1.oci.oraclecloud.com"
     textinput = text
 
