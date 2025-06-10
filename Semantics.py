@@ -67,6 +67,21 @@ def readoutput():
     full_transcript = " ".join(t.get("transcription", "") for t in transcriptions)
     return full_transcript.strip()
 
+# Key Phrase Extraction
+def extract_key_phrases(text):
+    language_client = oci.ai_language.AIServiceLanguageClient(config)
+
+    keyphrase_details = oci.ai_language.models.DetectLanguageKeyPhrasesDetails(
+        text=text,
+    )
+
+    response = language_client.detect_language_key_phrases(
+        detect_language_key_phrases_details=keyphrase_details
+    )
+
+    key_phrases = [phrase.text for phrase in response.data.key_phrases]
+    return key_phrases
+
 # Transcribe Function
 def transcribe(inputfile):
     ai_speech_client = oci.ai_speech.AIServiceSpeechClient(config)
@@ -257,14 +272,13 @@ if "translated_text" in st.session_state:
     st.markdown("### 🔎 Extract Key Phrases")
 
     if st.button("Run Key Phrase Extraction"):
-        # TODO: Add actual OCI key phrase logic
-        st.success("Key phrases extracted (placeholder).")
-        st.session_state.key_phrases = ["example phrase 1", "example phrase 2", "example phrase 3"]
+        key_phrases = extract_key_phrases(st.session_state.translated_text)
+        st.session_state.key_phrases = key_phrases
+        st.success("Key phrases extracted")
 
 if "key_phrases" in st.session_state:
-    st.markdown("**Key Phrases:**")
-    for phrase in st.session_state.key_phrases:
-        st.write(f"- {phrase}")
+    key_phrases_text = "\n".join(st.session_state.key_phrases)
+    st.text_area("Extracted Key Phrases", value=key_phrases_text, height=150)
 
 # Notes Section
 st.markdown("---")
