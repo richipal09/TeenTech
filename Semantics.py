@@ -274,7 +274,7 @@ if "translated_text" in st.session_state:
     if st.button("Run Key Phrase Extraction"):
         key_phrases = extract_key_phrases(st.session_state.translated_text)
         st.session_state.key_phrases = key_phrases
-        st.success("Key phrases extracted")
+        st.success("Key Phrases extracted")
 
 if "key_phrases" in st.session_state:
     key_phrases_text = "\n".join(st.session_state.key_phrases)
